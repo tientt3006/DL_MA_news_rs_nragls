@@ -1,0 +1,26 @@
+\documentclass[../BTL.tex]{subfiles}
+\begin{document}
+
+\section{Thực nghiệm và kết quả}
+
+\subsection{Cài đặt thực nghiệm}
+Dự án tiến hành huấn luyện các mô hình trên tập dữ liệu chuẩn phiên bản thu gọn, bao gồm hơn năm mươi nghìn người dùng và những tương tác của họ trong vòng sáu tuần. Các từ vựng trong bài báo được mã hóa sử dụng bộ từ điển xây dựng từ tập huấn luyện, có kết hợp các biểu diễn từ học sẵn đa chiều nhằm giảm thiểu rủi ro học vẹt khi tập dữ liệu bị giới hạn quy mô. Quá trình cập nhật trọng số sử dụng bộ tối ưu hóa AdamW kết hợp với kỹ thuật làm nóng tỷ lệ học tập trước khi áp dụng cơ chế phân rã cosin. Hàm mất mát được tính toán qua cơ chế Entropy chéo với nhiều mẫu âm, phù hợp nhất với bài toán học phân biệt dùng cho việc xếp hạng các danh sách gợi ý.
+
+Đồng thời, quá trình huấn luyện tích cực tận dụng phương pháp tính toán độ chính xác hỗn hợp trên phần cứng đồ họa nhằm giảm tải bộ nhớ, từ đó tối đa hóa kích thước lô cập nhật trọng số và gia tăng thông lượng hệ thống. Toàn bộ các thuật toán từ mạng nền tảng đến các phiên bản kiến trúc thử nghiệm mới đều chia sẻ chung một quy trình tiền xử lý dữ liệu và cấu hình siêu tham số, đảm bảo kết quả đo lường mang tính công bằng và có sức nặng đối chiếu học thuật.
+
+\subsection{Phân tích độ chính xác dự đoán}
+Các kết quả kiểm thử trên tập xác thực cho thấy kiến trúc phân tích ma trận dựa trên định danh truyền thống hoàn toàn thất bại trong việc đưa ra dự đoán hợp lý. Điểm số dưới đường cong đạt mức rất thấp tương đương với việc đoán mò ngẫu nhiên, phản ánh rõ rệt mức độ nghiêm trọng của vấn đề khởi động lạnh trên các nền tảng tin tức. Ngược lại, những phương pháp trích xuất đặc trưng văn bản bằng mạng nơ-ron sâu đã đẩy chỉ số đánh giá tổng thể lên một mức tiêu chuẩn rất khả quan.
+
+Kiến trúc mạng chú ý tự thân nguyên bản cung cấp một điểm tham chiếu hiệu suất đáng tin cậy. Tuy nhiên, khi chuyển sang dùng cơ chế chú ý tuyến tính có cổng, điểm số đo lường bị sụt giảm một phần do sự thiếu chính xác tự nhiên sinh ra từ phương pháp tính toán xấp xỉ của hàm hạt nhân. Mặc dù vậy, khi tích hợp cơ chế phân rã sự chú ý theo thời gian cùng mạng tích chập một chiều do dự án đề xuất, mô hình liên tục học được những quy luật ẩn quan trọng, không chỉ lấy lại được phần hiệu suất bị mất mát mà còn vươn lên dẫn đầu, vượt qua mốc điểm số tham chiếu ban đầu với khoảng cách cực kỳ ấn tượng.
+
+\subsection{Đo lường độ phức tạp tính toán}
+Hệ thống tiến hành tái tạo một loạt các thử nghiệm mô phỏng độc lập trên các mô đun mã hóa người dùng để quan sát sự thay đổi của bộ nhớ video đồ họa và độ trễ suy luận khi tăng dần độ dài chuỗi lịch sử đầu vào. Ở các mức lịch sử đọc ngắn khoảng vài chục bài báo, kiến trúc nguyên bản chạy tương đối nhẹ bén do kích thước các cấu trúc dữ liệu chưa đủ lớn để tạo ra áp lực và phép toán nhân ma trận đã được vi mạch tối ưu hóa rất tốt.
+
+Tuy nhiên, khi đẩy ranh giới mô phỏng lên giới hạn của một người dùng gắn bó lâu năm với chuỗi lịch sử được kéo dài lên đến hai trăm bài báo, sự chuyển biến mang tính bùng nổ bắt đầu xuất hiện. Lượng bộ nhớ cấp phát cho cơ chế chú ý tự thân tăng vọt theo quỹ đạo đường parabol cong dốc, đe dọa trực tiếp giới hạn bộ nhớ vật lý của hệ thống. Trong khi đó, tài nguyên tiêu thụ bởi kiến trúc chú ý tuyến tính có cổng tiếp tục duy trì đà tăng trưởng theo phương ngang tuyến tính, tiết kiệm được hàng chục phần trăm không gian lưu trữ và chu kỳ máy. Tính chất thiết kế mở rộng ổn định này mang lại khả năng chống chịu vô cùng to lớn cho các hệ thống phục vụ gợi ý trực tiếp đang phải tiếp nhận hàng triệu lượt truy cập cùng một lúc.
+
+\subsection{Phân tích các trường hợp dự đoán lỗi}
+Dù sở hữu bộ trọng số đã được tinh chỉnh qua nhiều thế hệ lặp huấn luyện, mô hình thực nghiệm vẫn để lọt một vài quyết định sai lệch thú vị. Những kết xuất dữ liệu phân tích chi tiết thu thập từ tập kiểm thử tập trung vào quá trình ra quyết định của mạng nơ-ron đã chỉ ra ba nguyên nhân gây suy giảm điểm số phổ biến nhất.
+
+Nguyên nhân đầu tiên đến từ hiệu ứng mồi nhử của các tiêu đề bài báo mang tính giật gân, xúi giục người dùng tò mò nhấn vào bài đọc dù nó hoàn toàn lạc lõng so với quỹ đạo chủ đề cốt lõi của họ. Hệ thống dễ dàng đánh giá sai và bị bối rối khi cố gắng tìm ra quy luật logic từ những cú click mang tính ngẫu hứng này. Yếu tố tiếp theo là sự chuyển hướng đề tài đột ngột, một hành vi mang tính trào lưu khi người dùng chỉ muốn cập nhật các sự kiện giật gân đang diễn ra trên truyền thông dù nó trái ngược với các khuynh hướng đọc trong quá khứ. Cuối cùng, hệ thống học sâu đôi khi trở nên quá nhạy cảm với các danh từ đại diện cho thương hiệu, dẫn đến việc liên tục lặp lại các bài viết về cùng một công ty hoặc nhân vật mà không thể hiểu được bức tranh ngữ nghĩa tổng thể về lĩnh vực bao trùm. Những bài học giá trị này chỉ ra rằng, việc thu thập bổ sung thêm các hồ sơ thông tin định danh tĩnh của người dùng sẽ là chìa khóa không thể thiếu nhằm hướng đến sự hoàn hảo của công nghệ này.
+
+\end{document}

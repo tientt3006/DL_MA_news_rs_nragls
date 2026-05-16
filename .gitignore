@@ -1,0 +1,122 @@
+# ============================================================
+# News Search & Recommendation System — .gitignore
+# ============================================================
+
+# --- Environment ---
+.env
+*.env.local
+
+# ============================================================
+# Java / Maven (backend)
+# ============================================================
+backend/target/
+backend/.mvn/
+backend/*.jar
+backend/*.war
+*.class
+*.log
+
+# --- IDE ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.eclipse/
+.settings/
+.project
+.classpath
+
+# ============================================================
+# Python (ml-service)
+# ============================================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+ml-service/.venv/
+ml-service/venv/
+ml-service/.env
+ml-service/*.egg-info/
+ml-service/dist/
+ml-service/build/
+*.egg
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+
+# ============================================================
+# Node.js / React (frontend)
+# ============================================================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.cache/
+frontend/.parcel-cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ============================================================
+# Data & Models (large files — do NOT commit)
+# ============================================================
+data/raw/*/*tsv
+data/raw/*/*vec
+data/processed/
+data/index/
+models/*.pt
+models/*.pth
+models/*.bin
+models/*.npz
+models/*.pkl
+!models/.gitkeep
+
+# Keep placeholder files
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/index/.gitkeep
+
+# ============================================================
+# OS files
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# Docker
+# ============================================================
+.docker/
+
+# ============================================================
+# Miscellaneous
+# ============================================================
+*.tmp
+*.swp
+*.swo
+*.bak
+coverage/
+.nyc_output/
+
+*.zip
+coding_steps.md
+first_request.md
+project_plan.docx
+project_plan.md
+
+dictionary.bin
+postings.bin
+last_run.txt
+run3.txt
+
+CLOUDFLARE_TUNNEL.md
+unused/
+
+*.pdf
+*.syncdb
+*.sage-chat
+!*.tex
+tmp.tex

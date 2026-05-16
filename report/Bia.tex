@@ -1,0 +1,54 @@
+\documentclass[BTL.tex]{subfiles}
+\usepackage{fancybox}
+\usepackage{graphicx}
+\usepackage{float}
+\newcommand{\underwrite}[3][]{% \underwrite[<thickness>]{<numerator>}{<denominator>}
+  \genfrac{}{}{#1}{}{\textstyle #2}{\scriptstyle #3}
+}
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\thisfancypage{\setlength{\fboxsep}{12pt}\fbox}{}
+
+\begin{center}
+{\textbf{\large{HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG}}}\\
+{\textbf{\large{KHOA CÔNG NGHỆ THÔNG TIN 1}}}\\
+{\textbf{\large{\underline{\hspace{3cm}} o0o \underline{\hspace{3cm}}}}}\\
+
+\vspace{0.5cm}
+\includegraphics[width=0.35\linewidth]{pictures/ptit_logo_1.png}
+
+\vspace{0.7cm}
+{\textbf{\huge{BÁO CÁO BÀI TẬP LỚN}}}\\
+{\textbf{\huge{MÔN XỬ LÝ NGÔN NGỮ \\ TỰ NHIÊN}}}\\[1cm]
+{\textbf{\Large{Chatbot hỏi đáp Pháp luật Việt Nam}}}\\[1cm]
+
+% {\textbf{\large{Lớp : D22CQKH02-B}}}\\
+
+
+\vspace{1cm}
+\begin{tabular}{ll}
+{\textbf{\large{Giảng viên hướng dẫn:}}} & {\textbf{\large{Võ Ngọc Bích Uyên}}} \\
+{\textbf{\large{Số thứ tự nhóm:}}}  & {\textbf{\large{05}}}\\
+{\textbf{\large{Ngô Việt Anh}}}    & {\textbf{\large{MSV: B22DCKH004}}} \\
+{\textbf{\large{Nguyễn Hải Hiếu}}}    & {\textbf{\large{MSV: B22DCKH040}}} \\
+{\textbf{\large{Lê Đăng Phúc}}}    & {\textbf{\large{MSV: B22DCKH088}}} \\
+{\textbf{\large{Nguyễn Đình Tiến}}}    & {\textbf{\large{MSV: B22DCKH108}}} \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+% \begin{table}[H]
+% \centering
+% \begin{tabular}{ll}
+% \multicolumn{1}{c}{\textbf{\large{Giảng viên hướng dẫn:}}} & {\textbf{\large{Đặng Hoàng Long}}} \\
+% \end{tabular}
+% \end{table}
+
+\vspace*{1cm} % dịch dòng ngày xuống thêm
+{\textbf{\large{HÀ NỘI, 05/2026}}}
+
+\end{center}
+\end{titlepage}
+\end{document}

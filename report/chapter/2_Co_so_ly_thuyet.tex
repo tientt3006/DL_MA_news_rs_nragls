@@ -1,0 +1,21 @@
+\documentclass[../BTL.tex]{subfiles}
+\begin{document}
+
+\section{Cơ sở lý thuyết}
+
+\subsection{Bài toán gợi ý tin tức}
+Gợi ý tin tức là một bài toán đặc thù trong lĩnh vực hệ thống khuyến nghị. Khác với việc gợi ý phim ảnh hay hàng hóa, tin tức có vòng đời vô cùng ngắn và liên tục thay đổi theo dòng sự kiện. Nội dung của một bài báo thường không còn giữ được sức hấp dẫn chỉ sau vài ngày hoặc vài giờ xuất bản. Do đó, các phương pháp lọc cộng tác truyền thống chủ yếu hoạt động dựa trên định danh thường không đạt hiệu quả cao do gặp phải hiện tượng khởi động lạnh liên tục đối với các bài báo mới. Để giải quyết vấn đề này, các nghiên cứu hiện đại chuyển sang sử dụng phương pháp gợi ý dựa trên nội dung, tận dụng sức mạnh của mạng nơ-ron để trích xuất biểu diễn ngữ nghĩa trực tiếp từ văn bản như tiêu đề hay tóm tắt bài báo.
+
+Trong quy trình tính toán điển hình, mỗi bài báo sẽ được xử lý qua một khối mã hóa tin tức để tạo ra một véc tơ đặc trưng duy nhất. Lịch sử hành vi của người dùng, bao gồm một chuỗi các bài báo họ đã click đọc trước đây, sẽ được tổng hợp lại thông qua khối mã hóa người dùng nhằm tạo ra véc tơ biểu diễn sở thích cá nhân. Cuối cùng, khả năng người dùng sẽ click vào một bài báo mới được đánh giá thông qua điểm số tích vô hướng giữa véc tơ sở thích của người dùng và véc tơ đặc trưng của bài báo đó.
+
+\subsection{Khối mã hóa dựa trên cơ chế chú ý}
+Cơ chế chú ý đa đầu là thành phần cốt lõi trong các hệ thống gợi ý tin tức nổi tiếng như NRMS. Trong kiến trúc này, một ma trận chú ý sẽ được tính toán thông qua việc áp dụng hàm softmax lên tích vô hướng giữa ma trận truy vấn và ma trận khóa. Quá trình này cho phép mô hình học được mối tương quan chéo giữa mọi bài báo trong lịch sử đọc, qua đó tự động rút ra được những khía cạnh quan tâm tiềm ẩn và quan trọng nhất của người dùng.
+
+Dù mang lại khả năng phân tích ngữ nghĩa tuyệt vời, cơ chế chú ý truyền thống lại yêu cầu tính toán và lưu trữ một ma trận có kích thước tỉ lệ thuận với bình phương độ dài chuỗi lịch sử đầu vào. Khi lịch sử người dùng kéo dài lên tới hàng trăm hoặc hàng nghìn tương tác, lượng bộ nhớ tiêu thụ sẽ bùng nổ theo cấp số nhân, dẫn đến hiện tượng cạn kiệt tài nguyên xử lý đồ họa trên các máy chủ huấn luyện. Giới hạn vật lý này buộc các nhà phát triển phải giới hạn độ dài chuỗi đầu vào, vô tình làm mất đi dữ liệu lịch sử dài hạn quý giá của người dùng.
+
+\subsection{Cơ chế chú ý tuyến tính}
+Để vượt qua rào cản của độ phức tạp tính toán bậc hai, cơ chế chú ý tuyến tính đã được nghiên cứu nhằm xấp xỉ hàm softmax truyền thống thông qua một hàm ánh xạ hạt nhân. Bằng cách áp dụng một hàm biến đổi phi tuyến để đảm bảo các véc tơ truy vấn và khóa luôn nằm trong miền giá trị dương, cơ chế này cho phép thay đổi thứ tự nhân ma trận dựa trên tính chất kết hợp đại số. Thay vì nhân ma trận truy vấn với ma trận khóa trước để tạo ra một ma trận phụ thuộc chiều dài chuỗi cực lớn, cơ chế chú ý tuyến tính tiến hành nhân ma trận khóa chuyển vị với ma trận giá trị trước.
+
+Kết quả của phép tính ưu tiên này là một ma trận có kích thước chỉ phụ thuộc vào chiều ẩn của mạng, một tham số thường rất nhỏ gọn và độc lập với số lượng tương tác của người dùng. Nhờ kỹ thuật tinh tế này, độ phức tạp tính toán không gian và thời gian theo chiều dài chuỗi được chuyển hóa thành bậc nhất. Mô hình tham chiếu NRAGLS đã ứng dụng thành công phương pháp này song song với một cổng phi tuyến để đánh giá và thanh lọc những nội dung gây nhiễu trong lịch sử hành vi. Những tính chất toán học ưu việt này tạo tiền đề vững chắc cho các đề xuất cải tiến về độ trễ và khả năng chống quá khớp trong đồ án của chúng tôi.
+
+\end{document}

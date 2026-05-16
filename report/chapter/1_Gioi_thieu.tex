@@ -1,0 +1,15 @@
+\documentclass[../BTL.tex]{subfiles}
+\begin{document}
+
+\section{Giới thiệu}
+\subsection{Đặt vấn đề}
+Trong kỷ nguyên bùng nổ thông tin hiện nay, các nền tảng tin tức trực tuyến cung cấp hàng ngàn bài báo mới mỗi ngày. Điều này khiến cho người dùng gặp khó khăn trong việc tìm kiếm những nội dung thực sự phù hợp với sở thích cá nhân. Một hệ thống gợi ý tin tức tự động đóng vai trò thiết yếu để thu hút và giữ chân người đọc. Tuy nhiên, bài toán này phải đối mặt với nhiều thách thức lớn về mặt kỹ thuật và độ phức tạp tính toán.
+
+Các phương pháp lọc cộng tác truyền thống, điển hình như phân tích ma trận hay NeuMF, chủ yếu dựa trên định danh của người dùng và bài báo. Các phương pháp này gặp hạn chế nghiêm trọng ở vấn đề khởi động lạnh, vì tin tức có vòng đời vô cùng ngắn và liên tục được cập nhật. Do đó, các hệ thống gợi ý dựa trên nội dung sử dụng mạng nơ-ron như NRMS đã ra đời để nắm bắt ngữ nghĩa của bài báo thông qua tiêu đề, mang lại hiệu quả dự đoán cao hơn rõ rệt. Dù vậy, một khó khăn khác lại nảy sinh ở giới hạn tài nguyên. Cơ chế chú ý tự thân trong NRMS có độ phức tạp bậc hai theo độ dài chuỗi lịch sử, dẫn đến việc tiêu tốn cực kỳ nhiều bộ nhớ GPU và dễ gây tràn bộ nhớ khi xử lý lịch sử tương tác dài của người dùng.
+
+\subsection{Mục tiêu dự án}
+Dự án này tập trung nghiên cứu và cải tiến các kiến trúc mạng nơ-ron nhằm cân bằng giữa độ chính xác và hiệu năng của hệ thống gợi ý tin tức. Mục tiêu cốt lõi là giải quyết nút thắt cổ chai về độ phức tạp bậc hai của cơ chế chú ý tự thân. Để đạt được điều này, chúng tôi nghiên cứu triển khai mô hình NRAGLS sử dụng cơ chế chú ý tuyến tính. Cơ chế này giúp giảm độ phức tạp xuống bậc nhất, qua đó giải phóng bộ nhớ và tăng tốc độ suy luận đối với các danh sách lịch sử dài.
+
+Bên cạnh việc kế thừa kiến trúc cơ sở, dự án đề xuất một số cải tiến mang tính kỹ thuật. Chúng tôi áp dụng mạng tích chập một chiều kết hợp biểu diễn từ đa chiều được huấn luyện trước để trích xuất đặc trưng bài báo thay vì dùng chú ý đa đầu, nhằm tránh hiện tượng học vẹt trên các tập dữ liệu nhỏ. Ngoài ra, một cơ chế phân rã theo thời gian cũng được đưa vào để mô hình có khả năng tự động giảm bớt mức độ quan trọng của những bài báo cũ trong lịch sử đọc, phản ánh sát với thực tế khi người dùng thường quan tâm nhiều hơn đến các chủ đề mới cập nhật. Qua đó, dự án tiến hành đánh giá hiệu năng tổng thể trên các thước đo chuẩn và phân tích lỗi chuyên sâu để làm rõ ưu nhược điểm của phương pháp đề xuất.
+
+\end{document}

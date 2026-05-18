@@ -34,6 +34,7 @@
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage{xurl}
+\usepackage{longtable}
 
 \usepackage[nonumberlist, nopostdot, nogroupskip, acronym]{glossaries}
 \usepackage{glossary-superragged}
@@ -74,8 +75,8 @@
 
 \setlength{\headheight}{10pt}
 
-\def \TITLE{ĐỒ ÁN TỐT NGHIỆP}
-\def \AUTHOR{NGUYỄN VĂN ABC}
+\def \TITLE{BÁO CÁO BÀI TẬP LỚN -- HỆ THỐNG GỢI Ý TIN TỨC}
+\def \AUTHOR{Nhóm 13 -- Deep Learning}
 
 % ===================================================
 \titleformat{\chapter}[hang]{\centering\bfseries}{CHƯƠNG \thechapter.\ }{0pt}{}[]
@@ -242,8 +243,8 @@
 
 % \phantomsection\addcontentsline{toc}{section}{\numberline {} DANH MỤC THUẬT NGỮ VÀ TỪ VIẾT TẮT}
  
-% \newpage
-% \subfile{chapter/0_5_Danh_muc_viet_tat.tex}
+\newpage
+\subfile{chapter/0_5_Danh_muc_viet_tat.tex}
 
 
 % \newpage
@@ -277,11 +278,11 @@
 \label{chapter:Experiment}
 \subfile{chapter/3_Thuc_nghiem_va_ket_qua}
 
-% \newpage
-% %\pagestyle{fancy} % Áp dụng header và footer
-% \chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN} %Kết luận và hướng phát triển
-% \label{chapter:conclusion}
-% \subfile{chapter/4_Ket_luan}
+\newpage
+%\pagestyle{fancy} % Áp dụng header và footer
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN} %Kết luận và hướng phát triển
+\label{chapter:conclusion}
+\subfile{chapter/4_Ket_luan}
 
 \newpage
 \pagestyle{empty} % Header và footer rỗng

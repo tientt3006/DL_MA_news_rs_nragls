@@ -1,21 +1,134 @@
 \documentclass[../BTL.tex]{subfiles}
 \begin{document}
 
-\section{Cơ sở lý thuyết}
+\section{Bài toán gợi ý tin tức}
 
-\subsection{Bài toán gợi ý tin tức}
-Gợi ý tin tức là một bài toán đặc thù trong lĩnh vực hệ thống khuyến nghị. Khác với việc gợi ý phim ảnh hay hàng hóa, tin tức có vòng đời vô cùng ngắn và liên tục thay đổi theo dòng sự kiện. Nội dung của một bài báo thường không còn giữ được sức hấp dẫn chỉ sau vài ngày hoặc vài giờ xuất bản. Do đó, các phương pháp lọc cộng tác truyền thống chủ yếu hoạt động dựa trên định danh thường không đạt hiệu quả cao do gặp phải hiện tượng khởi động lạnh liên tục đối với các bài báo mới. Để giải quyết vấn đề này, các nghiên cứu hiện đại chuyển sang sử dụng phương pháp gợi ý dựa trên nội dung, tận dụng sức mạnh của mạng nơ-ron để trích xuất biểu diễn ngữ nghĩa trực tiếp từ văn bản như tiêu đề hay tóm tắt bài báo.
+Gợi ý tin tức là một bài toán đặc thù trong lĩnh vực hệ thống khuyến nghị (Recommender Systems). Khác với gợi ý phim ảnh hay sản phẩm thương mại, tin tức có vòng đời vô cùng ngắn và liên tục thay đổi theo dòng sự kiện. Một bài báo thường chỉ giữ được sức hấp dẫn trong vài giờ đến vài ngày sau khi xuất bản. Do đó, các phương pháp lọc cộng tác truyền thống dựa trên ID bài viết gặp hạn chế nghiêm trọng bởi hiện tượng khởi động lạnh liên tục đối với các bài báo mới \cite{wu2020mind}. Các nghiên cứu hiện đại chuyển sang khai thác trực tiếp nội dung văn bản bằng mạng nơ-ron sâu để trích xuất biểu diễn ngữ nghĩa từ tiêu đề và tóm tắt bài báo.
 
-Trong quy trình tính toán điển hình, mỗi bài báo sẽ được xử lý qua một khối mã hóa tin tức để tạo ra một véc tơ đặc trưng duy nhất. Lịch sử hành vi của người dùng, bao gồm một chuỗi các bài báo họ đã click đọc trước đây, sẽ được tổng hợp lại thông qua khối mã hóa người dùng nhằm tạo ra véc tơ biểu diễn sở thích cá nhân. Cuối cùng, khả năng người dùng sẽ click vào một bài báo mới được đánh giá thông qua điểm số tích vô hướng giữa véc tơ sở thích của người dùng và véc tơ đặc trưng của bài báo đó.
+Trong quy trình tính toán điển hình, kiến trúc hệ thống gợi ý tin tức gồm ba thành phần chính. Khối mã hóa tin tức (News Encoder) xử lý văn bản mỗi bài báo để tạo ra một véc-tơ đặc trưng $\mathbf{n} \in \mathbb{R}^{d}$. Khối mã hóa người dùng (User Encoder) tổng hợp chuỗi các véc-tơ tin tức trong lịch sử đọc $\{\mathbf{n}_1, \mathbf{n}_2, \ldots, \mathbf{n}_L\}$ thành một véc-tơ biểu diễn sở thích $\mathbf{u} \in \mathbb{R}^{d}$. Cuối cùng, mức độ phù hợp giữa người dùng và một bài báo ứng viên được tính bằng tích vô hướng:
+\begin{equation}
+    \text{score}(\mathbf{u}, \mathbf{n}_c) = \mathbf{u}^{\top} \mathbf{n}_c
+\end{equation}
 
-\subsection{Khối mã hóa dựa trên cơ chế chú ý}
-Cơ chế chú ý đa đầu là thành phần cốt lõi trong các hệ thống gợi ý tin tức nổi tiếng như NRMS. Trong kiến trúc này, một ma trận chú ý sẽ được tính toán thông qua việc áp dụng hàm softmax lên tích vô hướng giữa ma trận truy vấn và ma trận khóa. Quá trình này cho phép mô hình học được mối tương quan chéo giữa mọi bài báo trong lịch sử đọc, qua đó tự động rút ra được những khía cạnh quan tâm tiềm ẩn và quan trọng nhất của người dùng.
+\section{Phương pháp NeuMF (Lọc cộng tác nơ-ron)}
 
-Dù mang lại khả năng phân tích ngữ nghĩa tuyệt vời, cơ chế chú ý truyền thống lại yêu cầu tính toán và lưu trữ một ma trận có kích thước tỉ lệ thuận với bình phương độ dài chuỗi lịch sử đầu vào. Khi lịch sử người dùng kéo dài lên tới hàng trăm hoặc hàng nghìn tương tác, lượng bộ nhớ tiêu thụ sẽ bùng nổ theo cấp số nhân, dẫn đến hiện tượng cạn kiệt tài nguyên xử lý đồ họa trên các máy chủ huấn luyện. Giới hạn vật lý này buộc các nhà phát triển phải giới hạn độ dài chuỗi đầu vào, vô tình làm mất đi dữ liệu lịch sử dài hạn quý giá của người dùng.
+NeuMF \cite{he2017neumf} là một phương pháp lọc cộng tác hiện đại sử dụng mạng nơ-ron sâu để mô hình hóa tương tác giữa người dùng và bài báo. Mỗi người dùng $u$ và mỗi bài báo $i$ được gán một véc-tơ nhúng (embedding) riêng biệt. NeuMF kết hợp hai nhánh song song: nhánh nhân ma trận tổng quát (GMF) thực hiện phép nhân element-wise giữa hai véc-tơ nhúng, và nhánh perceptron đa tầng (MLP) cho phép học các tương tác phi tuyến phức tạp hơn. Kết quả từ hai nhánh được nối (concatenate) và đi qua một lớp tuyến tính cuối cùng để đưa ra dự đoán xác suất click.
+
+Hạn chế lớn nhất của NeuMF trong bài toán gợi ý tin tức là sự phụ thuộc hoàn toàn vào ID. Mỗi bài báo mới chưa có lịch sử tương tác sẽ không có véc-tơ nhúng tương ứng, khiến mô hình không thể đưa ra bất kỳ dự đoán nào. Trong dự án này, NeuMF được triển khai làm đường cơ sở (baseline) để minh chứng định lượng cho sự cần thiết của phương pháp dựa trên nội dung.
+
+\section{Phương pháp NRMS (Chú ý tự thân đa đầu)}
+
+NRMS \cite{wu2019nrms} là mô hình tham chiếu chính trong dự án. Kiến trúc NRMS sử dụng cơ chế chú ý tự thân đa đầu (Multi-Head Self-Attention) \cite{vaswani2017attention} cho cả hai khối mã hóa tin tức và mã hóa người dùng.
+
+\subsection{Cơ chế chú ý tự thân đa đầu}
+
+Cho chuỗi đầu vào $\mathbf{X} \in \mathbb{R}^{L \times d}$, cơ chế chú ý tính toán ba ma trận truy vấn, khóa và giá trị thông qua các phép chiếu tuyến tính:
+\begin{equation}
+    \mathbf{Q} = \mathbf{X}\mathbf{W}_Q, \quad \mathbf{K} = \mathbf{X}\mathbf{W}_K, \quad \mathbf{V} = \mathbf{X}\mathbf{W}_V
+\end{equation}
+trong đó $\mathbf{W}_Q, \mathbf{W}_K, \mathbf{W}_V \in \mathbb{R}^{d \times d}$ là các ma trận trọng số học được. Ma trận chú ý được tính bằng:
+\begin{equation}
+    \text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}}\right)\mathbf{V}
+\end{equation}
+
+Phép tính $\mathbf{Q}\mathbf{K}^{\top}$ tạo ra ma trận có kích thước $L \times L$, dẫn đến độ phức tạp bộ nhớ $\mathcal{O}(L^2)$. Trong chú ý đa đầu, không gian biểu diễn được chia thành $H$ đầu song song, mỗi đầu hoạt động trên một không gian con có chiều $d_k = d/H$, sau đó kết quả được nối lại và chiếu qua ma trận $\mathbf{W}_O$.
+
+\subsection{Tổng hợp bằng Additive Attention}
+
+Sau khi xử lý qua chú ý tự thân, chuỗi véc-tơ đầu ra được tổng hợp thành một véc-tơ duy nhất thông qua cơ chế Additive Attention:
+\begin{equation}
+    \alpha_i = \frac{\exp\!\left(\mathbf{v}^{\top}\tanh(\mathbf{W}_a \mathbf{h}_i + \mathbf{b}_a)\right)}{\sum_{j=1}^{L} \exp\!\left(\mathbf{v}^{\top}\tanh(\mathbf{W}_a \mathbf{h}_j + \mathbf{b}_a)\right)}, \quad
+    \mathbf{r} = \sum_{i=1}^{L} \alpha_i \mathbf{h}_i
+\end{equation}
+trong đó $\mathbf{W}_a$, $\mathbf{b}_a$ và $\mathbf{v}$ là các tham số học được. Véc-tơ $\mathbf{r}$ chính là biểu diễn cuối cùng của tin tức hoặc người dùng.
+
+\section{Phương pháp NRAGLS (Chú ý tuyến tính có cổng)}
+
+Để giải quyết giới hạn bộ nhớ $\mathcal{O}(L^2)$ của NRMS, mô hình NRAGLS thay thế cơ chế chú ý tự thân truyền thống bằng Gated Linear Attention (GLA) \cite{yang2023gla,katharopoulos2020linear} ở khối mã hóa người dùng.
 
 \subsection{Cơ chế chú ý tuyến tính}
-Để vượt qua rào cản của độ phức tạp tính toán bậc hai, cơ chế chú ý tuyến tính đã được nghiên cứu nhằm xấp xỉ hàm softmax truyền thống thông qua một hàm ánh xạ hạt nhân. Bằng cách áp dụng một hàm biến đổi phi tuyến để đảm bảo các véc tơ truy vấn và khóa luôn nằm trong miền giá trị dương, cơ chế này cho phép thay đổi thứ tự nhân ma trận dựa trên tính chất kết hợp đại số. Thay vì nhân ma trận truy vấn với ma trận khóa trước để tạo ra một ma trận phụ thuộc chiều dài chuỗi cực lớn, cơ chế chú ý tuyến tính tiến hành nhân ma trận khóa chuyển vị với ma trận giá trị trước.
 
-Kết quả của phép tính ưu tiên này là một ma trận có kích thước chỉ phụ thuộc vào chiều ẩn của mạng, một tham số thường rất nhỏ gọn và độc lập với số lượng tương tác của người dùng. Nhờ kỹ thuật tinh tế này, độ phức tạp tính toán không gian và thời gian theo chiều dài chuỗi được chuyển hóa thành bậc nhất. Mô hình tham chiếu NRAGLS đã ứng dụng thành công phương pháp này song song với một cổng phi tuyến để đánh giá và thanh lọc những nội dung gây nhiễu trong lịch sử hành vi. Những tính chất toán học ưu việt này tạo tiền đề vững chắc cho các đề xuất cải tiến về độ trễ và khả năng chống quá khớp trong đồ án của chúng tôi.
+Ý tưởng cốt lõi là thay hàm softmax bằng một hàm ánh xạ hạt nhân (kernel feature map) $\phi(\cdot)$ đảm bảo các véc-tơ luôn dương:
+\begin{equation}
+    \phi(\mathbf{x}) = \text{ELU}(\mathbf{x}) + 1
+\end{equation}
+
+Khi áp dụng $\phi$ cho cả truy vấn và khóa, biểu thức chú ý trở thành:
+\begin{equation}
+    \text{LinearAttn}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \frac{\phi(\mathbf{Q}) \left(\phi(\mathbf{K})^{\top} \mathbf{V}\right)}{\phi(\mathbf{Q}) \left(\phi(\mathbf{K})^{\top} \mathbf{1}\right)}
+\end{equation}
+
+Nhờ tính chất kết hợp của phép nhân ma trận, thay vì tính $\phi(\mathbf{Q})\phi(\mathbf{K})^{\top}$ trước (tạo ma trận $L \times L$), ta tính $\phi(\mathbf{K})^{\top}\mathbf{V}$ trước, kết quả là ma trận $d \times d$ nhỏ gọn và độc lập với $L$. Tổng thể, độ phức tạp giảm từ $\mathcal{O}(L^2 \cdot d)$ xuống $\mathcal{O}(L \cdot d^2)$.
+
+\subsection{Cổng nội dung (Content-based Gating)}
+
+GLA bổ sung thêm một cổng phi tuyến (gate) để thanh lọc nội dung:
+\begin{equation}
+    \mathbf{g} = \sigma(\mathbf{W}_g \mathbf{x} + \mathbf{b}_g)
+\end{equation}
+trong đó $\sigma$ là hàm sigmoid. Cổng $\mathbf{g}$ được nhân vào véc-tơ khóa và giá trị trước khi tính toán chú ý, giúp mô hình tự động loại bỏ những bài báo gây nhiễu (noise) trong lịch sử đọc mà không gian đặc trưng đánh giá là ít liên quan.
+
+\subsection{Cơ chế phân rã theo thời gian (Recency-Decayed Gating)}
+
+Đây là cải tiến do nhóm đề xuất. Trong thực tế, sở thích đọc tin của người dùng thay đổi theo thời gian; các bài báo đọc gần đây phản ánh sở thích hiện tại tốt hơn so với các bài đọc từ nhiều ngày trước. Cơ chế phân rã theo thời gian mô hình hóa quan sát này bằng cách nhân cổng nội dung với một trọng số phân rã theo vị trí:
+\begin{equation}
+    \mathbf{g}_{\text{final}}(i) = \mathbf{g}(i) \cdot \alpha^{(L-1-i)}
+\end{equation}
+trong đó $\alpha \in (0, 1)$ là hệ số phân rã học được (learnable), được tham số hóa qua hàm sigmoid: $\alpha = \sigma(\theta)$. Với bài báo mới nhất ($i = L-1$), trọng số phân rã bằng $\alpha^0 = 1$, giữ nguyên toàn bộ tín hiệu. Với bài báo cũ nhất ($i = 0$), trọng số giảm xuống $\alpha^{L-1}$, gần bằng không khi $L$ đủ lớn. Cơ chế này không làm tăng thêm bất kỳ chi phí tính toán đáng kể nào so với GLA gốc.
+
+\section{Kiến trúc khối cho ăn tiến (Feed-Forward)}
+
+\subsection{Chuẩn hóa RMSNorm}
+
+Thay vì sử dụng Layer Normalization truyền thống, kiến trúc NRAGLS áp dụng RMSNorm \cite{zhang2019rms} nhẹ hơn do bỏ qua phần dịch chuyển trung bình:
+\begin{equation}
+    \text{RMSNorm}(\mathbf{x}) = \frac{\mathbf{x}}{\sqrt{\frac{1}{d}\sum_{i=1}^{d}x_i^2 + \epsilon}} \odot \boldsymbol{\gamma}
+\end{equation}
+trong đó $\boldsymbol{\gamma}$ là véc-tơ tỉ lệ học được và $\epsilon$ là hằng số ổn định số học.
+
+\subsection{SGLU (Simplified Gated Linear Unit)}
+
+Khối cho ăn tiến sử dụng cơ chế cổng giản lược SGLU \cite{dauphin2017glu}, kết hợp hai nhánh song song với hàm kích hoạt SiLU:
+\begin{equation}
+    \text{SGLU}(\mathbf{x}) = \text{SiLU}(\mathbf{W}_1 \mathbf{x}) \odot (\mathbf{W}_2 \mathbf{x})
+\end{equation}
+trong đó $\text{SiLU}(x) = x \cdot \sigma(x)$. Kết quả được chiếu qua ma trận đầu ra $\mathbf{W}_O$. Cấu trúc Pre-Norm (chuẩn hóa trước) được áp dụng: mỗi khối GLA và SGLU đều có một lớp RMSNorm phía trước, kết hợp với kết nối tắt (residual connection).
+
+\section{Khối mã hóa tin tức bằng mạng tích chập một chiều}
+
+Trong phiên bản NRAGLS++, khối mã hóa tin tức được thiết kế lại bằng mạng tích chập một chiều (Conv1d) thay thế cho chú ý đa đầu. Với nhân tích chập kích thước $k=3$, mạng trích xuất các đặc trưng n-gram cục bộ từ chuỗi từ nhúng (word embeddings), sau đó tổng hợp bằng Additive Attention:
+\begin{equation}
+    \mathbf{h} = \text{ReLU}\!\left(\text{Conv1d}(\mathbf{E})\right), \quad \mathbf{n} = \text{AdditiveAttn}(\mathbf{h})
+\end{equation}
+trong đó $\mathbf{E}$ là ma trận nhúng từ. Biểu diễn từ đa chiều GloVe \cite{pennington2014glove} được tải trước vào lớp nhúng và tinh chỉnh trong quá trình huấn luyện. Mạng CNN có ưu điểm ít bị quá khớp (overfitting) hơn so với chú ý đa đầu khi tập dữ liệu nhỏ, do số lượng tham số gọn hơn và cơ chế trích xuất cục bộ giúp bắt được các cụm từ ngữ nghĩa mà không cần ma trận chú ý toàn cục.
+
+\section{Tích hợp mô hình ngôn ngữ lớn DistilBERT}
+
+Nhằm khắc phục hạn chế của từ điển tĩnh GloVe trong việc phân tích ngữ nghĩa theo ngữ cảnh, dự án tích hợp mô hình ngôn ngữ lớn huấn luyện trước DistilBERT \cite{sanh2019distilbert} vào khối mã hóa tin tức. DistilBERT là phiên bản chưng cất (distilled) của BERT \cite{devlin2019bert}, giữ lại khoảng 97\% năng lực ngôn ngữ nhưng nhỏ hơn 40\% về số tham số, phù hợp với môi trường giới hạn VRAM.
+
+\subsection{Chiến lược cố định trọng số (Frozen Precompute)}
+
+Toàn bộ trọng số của DistilBERT được giữ cố định (freeze). Véc-tơ $[\text{CLS}]$ đầu ra của DistilBERT cho mỗi bài báo được tính toán một lần duy nhất trước khi huấn luyện, lưu vào một tensor $\mathbf{H}_{\text{pre}} \in \mathbb{R}^{(N+1) \times 768}$, với $N$ là tổng số bài báo. Trong quá trình huấn luyện, khối mã hóa người dùng chỉ tra cứu (lookup) véc-tơ sẵn có theo chỉ số bài báo, loại bỏ hoàn toàn chi phí suy luận BERT. Chiến lược này cho phép huấn luyện nhanh (khoảng 35 giây/epoch) nhưng giới hạn khả năng biểu diễn do đặc trưng văn bản là tĩnh.
+
+\subsection{Chiến lược tinh chỉnh toàn trình (End-to-End Fine-tuning)}
+
+Một số tầng phía trên của DistilBERT được mở khóa để cho phép đạo hàm truyền ngược từ hàm mất mát đi xuyên qua các lớp Transformer. Chiến lược này đòi hỏi kỹ thuật Gradient Accumulation để tránh tràn VRAM, bù lại cho phép DistilBERT tự điều chỉnh các trọng số phân tích từ vựng để đồng bộ hóa tối ưu với cơ chế tổng hợp sở thích của khối GLA. Tuy tốn nhiều tài nguyên hơn, phương pháp này đạt hiệu suất dự đoán cao nhất.
+
+\section{Hàm mất mát và tối ưu hóa}
+
+Tất cả các mô hình sử dụng chung hàm mất mát InfoNCE (Cross-Entropy với nhiều mẫu âm). Cho mỗi mẫu huấn luyện gồm một bài báo dương (đã được click) và $K$ bài báo âm (không click), điểm số logit được tính:
+\begin{equation}
+    s_j = \mathbf{u}^{\top} \mathbf{n}_j, \quad j \in \{0, 1, \ldots, K\}
+\end{equation}
+trong đó $j=0$ là bài báo dương. Hàm mất mát là:
+\begin{equation}
+    \mathcal{L} = -\log \frac{\exp(s_0)}{\sum_{j=0}^{K} \exp(s_j)}
+\end{equation}
+
+Quá trình tối ưu hóa sử dụng bộ tối ưu AdamW \cite{loshchilov2019adamw} kết hợp cơ chế làm nóng tỷ lệ học (linear warmup) và phân rã cosin (cosine decay).
+
+\section{Các thước đo đánh giá}
+
+Hiệu suất các mô hình được đánh giá bằng bốn thước đo chuẩn trong lĩnh vực xếp hạng thông tin: AUC (diện tích dưới đường cong ROC, đánh giá khả năng phân biệt giữa bài dương và bài âm), MRR (trung bình nghịch đảo thứ hạng, phản ánh vị trí trung bình của bài click trong danh sách xếp hạng), nDCG@5 và nDCG@10 (mức độ tích lũy giảm dần chuẩn hóa, đánh giá chất lượng xếp hạng ở các vị trí đầu).
 
 \end{document}

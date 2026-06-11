@@ -142,7 +142,7 @@
 	
 \usepackage[all]{hypcap} % Cho phép tham chiếu chính xác đến hình ảnh và bảng biểu
 
-\graphicspath{{figures/}{../figures/}} % Thư mục chứa các hình ảnh
+\graphicspath{{figures/}{../figures/}{../notebooks/03_results/figures/}} % Thư mục chứa các hình ảnh
 
 \counterwithin{figure}{chapter} % Đánh số hình ảnh kèm theo chapter. Ví dụ: Hình 1.1, 1.2,..
 
@@ -175,9 +175,9 @@
 %\newpage
 %\subfile{chapters/0_1_subject.tex}
 
-% \newpage
-% \pagenumbering{gobble}
-% \subfile{chapter/0_2_Loi_cam_on.tex}
+\newpage
+\pagenumbering{gobble}
+\subfile{chapter/0_2_Loi_cam_on.tex}
 
 % ===================================================
 % \pagestyle{empty} % Header và footer rỗng
@@ -217,21 +217,21 @@
 
 \pagenumbering{roman}
 %Tạo danh mục hình vẽ.
-% \renewcommand{\listfigurename}{DANH MỤC HÌNH VẼ}
-% {\let\oldnumberline\numberline
-% \renewcommand{\numberline}{Hình~\oldnumberline}
-% \listoffigures} 
-% \phantomsection
-% \addcontentsline{toc}{section}{\numberline {} DANH MỤC HÌNH VẼ}
-% \newpage
+\renewcommand{\listfigurename}{DANH MỤC HÌNH VẼ}
+{\let\oldnumberline\numberline
+\renewcommand{\numberline}{Hình~\oldnumberline}
+\listoffigures} 
+\phantomsection
+\addcontentsline{toc}{section}{\numberline {} DANH MỤC HÌNH VẼ}
+\newpage
 
  %Tạo danh mục bảng biểu.
-% \renewcommand{\listtablename}{DANH MỤC BẢNG BIỂU}
-% {\let\oldnumberline\numberline
-% \renewcommand{\numberline}{Bảng~\oldnumberline}
-% \listoftables}
-% \phantomsection
-% \addcontentsline{toc}{section}{\numberline {} DANH MỤC BẢNG BIỂU}
+\renewcommand{\listtablename}{DANH MỤC BẢNG BIỂU}
+{\let\oldnumberline\numberline
+\renewcommand{\numberline}{Bảng~\oldnumberline}
+\listoftables}
+\phantomsection
+\addcontentsline{toc}{section}{\numberline {} DANH MỤC BẢNG BIỂU}
 
 % \glsaddall 
 %  \renewcommand*{\glossaryname}{Danh sách thuật ngữ}
@@ -267,7 +267,7 @@
 
 \newpage
 %\pagestyle{fancy} % Áp dụng header và footer
-\chapter{TÌM HIỂU CÁC BÀI BÁO}
+\chapter{CƠ SỞ LÝ THUYẾT}
 \label{chapter:Related_works}
 \subfile{chapter/2_Co_so_ly_thuyet}
 

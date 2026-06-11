@@ -123,13 +123,13 @@
         Với người dùng có lịch sử đọc tin $\mathcal{H}=\{n_1,\dots,n_L\}$,
         \textbf{xếp hạng} các tin mới xuất hiện theo xác suất click.
       \end{keybox}
-      {\scriptsize
+      \\scriptsize
       \textbf{Thách thức kỹ thuật:}
       \begin{itemize}
         \item Tin tức thay đổi \textit{liên tục} $\to$ không thể học ID tĩnh
         \item Lịch sử dài $L$ $\to$ mô hình phải \textit{hiểu chuỗi hành vi}
         \item Self-Attention cơ bản sẽ cần VRAM rất lớn khi L lớn : $\mathcal{O}(L^2 \cdot d)$
-      \end{itemize}}
+      \end{itemize}
 
 \begin{block}{Mục tiêu dự án}
         So sánh 5 kiến trúc trên cùng 1 tập dữ liệu,
@@ -637,7 +637,7 @@ training dễ OOM khi $L$ hoặc batch size lớn.
 \end{frame}
 
 % ─────────────────────────────────────────────────────────────────────────────
-\begin{frame}{Metrics Đánh Giá}
+\begin{frame}{Metrics Đánh Giá --- Ý nghĩa từng chỉ số}
   \begin{columns}[T]
     \column{0.50\textwidth}
       \textbf{AUC} (Area Under ROC Curve):
@@ -678,7 +678,7 @@ training dễ OOM khi $L$ hoặc batch size lớn.
 % ══════════════════════════════════════════════════════════════════════════════
 \section{6. Kết quả thực nghiệm}
 
-\begin{frame}{Bảng kết quả các metrics}
+\begin{frame}{Bảng so sánh Accuracy --- Ablation Study}
   \begin{table}
     \centering
     \small
@@ -795,39 +795,10 @@ training dễ OOM khi $L$ hoặc batch size lớn.
 \end{frame}
 
 % ─────────────────────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────────────────────
-\begin{frame}{Khảo sát Training Loss: Sự đánh đổi giữa Train và Test}
-  \begin{columns}[T]
-    \column{0.7\textwidth}
-      \begin{center}
-        \IfFileExists{figures/training_loss.png}{%
-          \includegraphics[width=0.95\textwidth]{figures/training_loss.png}%
-        }{%
-          \begin{tcolorbox}[colback=ptitlight,colframe=ptitmid,width=0.95\textwidth]
-            \centering\small\textit{[Chạy file \texttt{05-training-loss-analysis.ipynb} \\ để tạo hình \texttt{figures/training\_loss.png}]}
-          \end{tcolorbox}%
-        }
-      \end{center}
-
-    \column{0.3\textwidth}
-      \begin{keybox}[title={\faLightbulb\ Nhận xét}]
-      \scriptsize
-      
-        Đồ thị thể hiện giá trị InfoNCE Loss qua 5 epochs:
-        
- \textbf{Đường màu Cam/Vàng (NRAGLS):} Loss hội tụ nhanh và \textit{giảm sâu nhất}. Tuy nhiên, mô hình chỉ đang "học thuộc lòng" dữ liệu Train (Overfitting).
- 
- \textbf{Đường màu Xanh Ngọc (NRAGLS++):} Loss chững lại ở mức $1.31$, cao nhất trong các mô hình Deep Learning. Tuy nhiên nhờ CNN+GloVe, mô hình không bị quá khớp và đạt \textbf{AUC cao nhất trên tập Test}.
-      \end{keybox}
-  \end{columns}
-\end{frame}
-
-
 \begin{frame}{Phân tích Trade-off \& Hiện tượng Overfitting}
   \begin{columns}[T]
     \column{0.50\textwidth}
       \begin{block}{NeuMF \& NRMS}
-      \small
         \textbf{NeuMF}: phụ thuộc ID $\to$ điểm thấp
         do cold-start với tin mới.
         Không phù hợp cho news recommendation.
@@ -840,24 +811,23 @@ training dễ OOM khi $L$ hoặc batch size lớn.
 
     \column{0.47\textwidth}
       \begin{alertblock}{NRAGLS gốc --- Overfit}
-      \scriptsize
         Dù tiết kiệm bộ nhớ, NRAGLS gốc
         bị \textbf{overfitting} (quá khớp) do:
         \begin{itemize}
           \item Kernel approximation mất thông tin
           \item Ít tham số regularization
           \item Training loss xuống nhưng
-            Dev AUC không cải thiện, Training loss \textit{giảm sâu nhất} (đạt $1.207$), nhưng Dev AUC lại \textit{thấp nhất} ($0.59$)
+            Dev AUC không cải thiện
         \end{itemize}
       \end{alertblock}
-    
-  \end{columns}
-  \begin{exampleblock}{NRAGLS++ --- Giải pháp}
-  \small
-        Sử dụng Pre-trained word embeddings + CNN cung cấp \textit{inductive bias} (định kiến quy nạp) mạnh mẽ. Nó ngăn Training loss giảm sâu (chỉ đạt $1.311$), nhưng bù lại khả năng tổng quát hóa  tốt hơn, Dev AUC \hl{lớn hơn $0.65$}.
+      \vspace{0.3em}
+      \begin{exampleblock}{NRAGLS++ --- Giải pháp}
+        Pre-trained word embeddings + CNN
+        cung cấp \textit{inductive bias} mạnh hơn,
+        giảm overfitting và \hl{vượt baseline}.
       \end{exampleblock}
+  \end{columns}
 \end{frame}
-
 
 % ─────────────────────────────────────────────────────────────────────────────
 \begin{frame}{Error Analysis --- Phân tích lỗi hệ thống}
@@ -910,7 +880,7 @@ training dễ OOM khi $L$ hoặc batch size lớn.
       \textbf{Nguyên nhân chênh lệch:}
       \begin{itemize}
         \item \textbf{Đặc trưng (Features):} Bài báo kết hợp Title, Abstract, \textit{Category, Topic}. Đồ án chỉ dùng cấu trúc rút gọn (Title + Abstract).
-        \item \textbf{Khối mã hóa tin tức (News Encoder):} Để đạt mốc $>0.70$, bài báo sử dụng các Mô hình ngôn ngữ lớn học sẵn (như BERT). Tuy nhiên, do rào cản phần cứng GPU, dự án chỉ ứng dụng mạng CNN kết hợp GloVe.
+        \item \textbf{Khối mã hóa tin tức (News Encoder):} Để đạt mốc $>0.70$, bài báo sử dụng các Mô hình ngôn ngữ lớn học sẵn (như BERT). ko do rào cản phần cứng GPU, dự án chỉ ứng dụng mạng CNN kết hợp GloVe.
       \end{itemize}
 
     \column{0.50\textwidth}
@@ -924,71 +894,7 @@ training dễ OOM khi $L$ hoặc batch size lớn.
   \end{columns}
 \end{frame}
 % ══════════════════════════════════════════════════════════════════════════════
-\section{7. Cải tiến theo Feedback: NRAGLS-BERT}
-
-\begin{frame}{Nâng cấp News Encoder với DistilBERT}
-  \begin{columns}[T]
-    \column{0.55\textwidth}
-      \textbf{Động lực (Thực hiện theo Feedback):}
-      \begin{itemize}
-        \item Khắc phục nhược điểm của Word Embedding / CNN học từ đầu.
-        \item Tận dụng khả năng hiểu ngữ nghĩa sâu của \textbf{Pre-trained Language Models} (PLMs).
-      \end{itemize}
-      
-      \vspace{0.3em}
-      \textbf{Kiến trúc NRAGLS-BERT:}
-      \begin{itemize}
-        \item \textbf{News Encoder:} Thay thế hoàn toàn bằng \texttt{distilbert-base-uncased}. Đóng băng (freeze) toàn bộ trọng số của BERT để tiết kiệm VRAM và chống Overfitting.
-        \item \textbf{User Encoder:} Tiếp tục sử dụng \textbf{Gated Linear Attention (GLA)} $\to$ Tối ưu hóa tối đa, tiết kiệm VRAM để gánh vác mô hình BERT.
-      \end{itemize}
-
-    \column{0.45\textwidth}
-      \begin{goodbox}[title={\faCheckCircle\ Lợi ích của sự kết hợp}]
-        \footnotesize
-        Việc dùng BERT cho bài toán News Recommendation với lịch sử dài ($L=50$) rất dễ gây OOM (Out of Memory). Nhờ kiến trúc $\mathcal{O}(L)$ của \textbf{NRAGLS}, ta có thể tích hợp BERT một cách khả thi trên phần cứng giới hạn (Kaggle GPU T4x2) mà các mô hình cũ như NRMS ($\mathcal{O}(L^2)$) khó làm được.
-      \end{goodbox}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Động lực nâng cấp: Phân tích lỗi mô hình CNN-GloVe}
-  \begin{columns}[T]
-    \column{0.95\textwidth}
-      Tiến hành phân tích các trường hợp dự đoán sai của mô hình NRAGLS++ (sử dụng mạng CNN và từ điển tĩnh GloVe). Kết quả cho thấy các nguyên nhân gây lỗi phổ biến bao gồm:
-      \begin{itemize}
-        \item Sự thay đổi sở thích đột ngột của người dùng (Topic drift).
-        \item Sự xuất hiện của các tiêu đề mang tính chất thu hút sự chú ý (Clickbait).
-        \item Hạn chế trong việc phân tích ngữ nghĩa theo ngữ cảnh, dẫn đến hiện tượng bất đồng bộ về mặt từ vựng (Semantic Mismatch).
-      \end{itemize}
-      
-      \vspace{0.5em}
-      Từ điển tĩnh GloVe bộc lộ điểm yếu khi xử lý các từ đồng nghĩa và từ đa nghĩa trong không gian ngữ cảnh hẹp của báo chí. Phát hiện này tạo tiền đề lý thuyết thiết yếu cho việc đề xuất tích hợp mô hình ngôn ngữ lớn (PLM) nhằm trích xuất đặc trưng văn bản sâu hơn.
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Phân tích sự hội tụ: Tinh chỉnh toàn trình và Cố định trọng số}
-  \begin{columns}[T]
-    \column{0.95\textwidth}
-      Thực nghiệm so sánh quá trình suy giảm hàm mất mát cho thấy sự khác biệt rõ rệt giữa hai chiến lược huấn luyện. Phương pháp tinh chỉnh toàn trình (End-to-End Fine-tuning) thể hiện tốc độ hội tụ siêu tốc, hàm mất mát giảm sâu chỉ sau 3 vòng lặp và đạt hiệu suất dự đoán cao nhất nhờ khả năng đồng bộ hóa chặt chẽ giữa mô hình ngôn ngữ và khối mã hóa người dùng. Tuy nhiên, nhược điểm lớn của phương pháp này là tiêu tốn lượng khổng lồ tài nguyên tính toán và bộ nhớ đồ họa, đồng thời đòi hỏi thời gian huấn luyện dài cho mỗi vòng lặp. 
-      
-      \vspace{0.5em}
-      Ngược lại, phương pháp cố định trọng số (Frozen Precompute) yêu cầu khối mã hóa người dùng phải tự xoay xở để khớp với các đặc trưng văn bản tĩnh, dẫn đến tốc độ hội tụ chậm hơn và hiệu suất cuối cùng thấp hơn. Bù lại, phương pháp này tiết kiệm tối đa tài nguyên, cho phép trích xuất trước toàn bộ kho dữ liệu tin tức, cực kỳ phù hợp với môi trường triển khai thực tế (Production) nơi có giới hạn phần cứng nghiêm ngặt và yêu cầu tốc độ phản hồi tính bằng mili-giây. Kết luận lại, việc lựa chọn phương pháp triển khai là một sự đánh đổi trực tiếp giữa giới hạn chi phí vận hành và độ chính xác tối đa kỳ vọng.
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Phân tích kiến trúc: Tính liên kết trong hệ khuyến nghị}
-  \begin{columns}[T]
-    \column{0.95\textwidth}
-      Việc tách rời khối mã hóa tin tức (BERT) để huấn luyện độc lập trên hành vi nhấp chuột là không khả thi về mặt lý thuyết:
-      \begin{itemize}
-        \item \textit{Tính tương đối của hành vi:} Sự kiện nhấp chuột không phải là thuộc tính tuyệt đối của văn bản, mà là hệ quả của sự tương thích giữa nội dung bài báo và lịch sử sở thích của từng người dùng cụ thể.
-        \item \textit{Ràng buộc truyền ngược đạo hàm:} Quá trình tính toán hàm mất mát yêu cầu tích vô hướng giữa đặc trưng tin tức và đặc trưng người dùng. Đạo hàm chỉ có thể được sinh ra khi có sự tham gia đồng thời của cả hai khối mã hóa.
-        \item Do đó, huấn luyện toàn trình là bắt buộc để mô hình ngôn ngữ tự động điều chỉnh các trọng số phân tích từ vựng sao cho đồng bộ hóa tối đa với cơ chế tổng hợp sở thích của khối mã hóa người dùng.
-      \end{itemize}
-  \end{columns}
-\end{frame}
-
-% ══════════════════════════════════════════════════════════════════════════════
-\section{8. Kết luận \& Hướng phát triển}
+\section{7. Kết luận \& Hướng phát triển}
 
 \begin{frame}{Kết luận}
   \begin{columns}[T]
@@ -1010,8 +916,8 @@ training dễ OOM khi $L$ hoặc batch size lớn.
             search để tăng tốc inference trên catalog lớn
           \item Thử nghiệm trên \textbf{MIND-large}
             ($\sim$1M users)
-          \item Tiếp tục Fine-tune một phần trọng số của \textbf{BERT}
-            (thay vì đóng băng hoàn toàn) để tăng cường Accuracy.
+          \item Tích hợp \textbf{PLM} (Pre-trained Language Model)
+            như BERT/RoBERTa làm News Encoder
           \item Online learning (học tăng dần) khi
             tin mới xuất hiện theo thời gian thực
         \end{itemize}

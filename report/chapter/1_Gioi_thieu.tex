@@ -1,15 +1,30 @@
 \documentclass[../BTL.tex]{subfiles}
 \begin{document}
 
-\section{Giới thiệu}
-\subsection{Đặt vấn đề}
-Trong kỷ nguyên bùng nổ thông tin hiện nay, các nền tảng tin tức trực tuyến cung cấp hàng ngàn bài báo mới mỗi ngày. Điều này khiến cho người dùng gặp khó khăn trong việc tìm kiếm những nội dung thực sự phù hợp với sở thích cá nhân. Một hệ thống gợi ý tin tức tự động đóng vai trò thiết yếu để thu hút và giữ chân người đọc. Tuy nhiên, bài toán này phải đối mặt với nhiều thách thức lớn về mặt kỹ thuật và độ phức tạp tính toán.
+\section{Đặt vấn đề}
 
-Các phương pháp lọc cộng tác truyền thống, điển hình như phân tích ma trận hay NeuMF, chủ yếu dựa trên định danh của người dùng và bài báo. Các phương pháp này gặp hạn chế nghiêm trọng ở vấn đề khởi động lạnh, vì tin tức có vòng đời vô cùng ngắn và liên tục được cập nhật. Do đó, các hệ thống gợi ý dựa trên nội dung sử dụng mạng nơ-ron như NRMS đã ra đời để nắm bắt ngữ nghĩa của bài báo thông qua tiêu đề, mang lại hiệu quả dự đoán cao hơn rõ rệt. Dù vậy, một khó khăn khác lại nảy sinh ở giới hạn tài nguyên. Cơ chế chú ý tự thân trong NRMS có độ phức tạp bậc hai theo độ dài chuỗi lịch sử, dẫn đến việc tiêu tốn cực kỳ nhiều bộ nhớ GPU và dễ gây tràn bộ nhớ khi xử lý lịch sử tương tác dài của người dùng.
+Trong kỷ nguyên bùng nổ thông tin hiện nay, các nền tảng tin tức trực tuyến cung cấp hàng ngàn bài báo mới mỗi ngày. Khối lượng nội dung khổng lồ này khiến người dùng gặp khó khăn đáng kể trong việc tìm kiếm những bài viết thực sự phù hợp với sở thích cá nhân. Một hệ thống gợi ý tin tức tự động (News Recommendation System) đóng vai trò thiết yếu để nâng cao trải nghiệm đọc, giữ chân người dùng và tăng lượng tương tác trên nền tảng. Tuy nhiên, bài toán gợi ý tin tức phải đối mặt với nhiều thách thức đặc thù so với các hệ thống khuyến nghị truyền thống.
 
-\subsection{Mục tiêu dự án}
-Dự án này tập trung nghiên cứu và cải tiến các kiến trúc mạng nơ-ron nhằm cân bằng giữa độ chính xác và hiệu năng của hệ thống gợi ý tin tức. Mục tiêu cốt lõi là giải quyết nút thắt cổ chai về độ phức tạp bậc hai của cơ chế chú ý tự thân. Để đạt được điều này, chúng tôi nghiên cứu triển khai mô hình NRAGLS sử dụng cơ chế chú ý tuyến tính. Cơ chế này giúp giảm độ phức tạp xuống bậc nhất, qua đó giải phóng bộ nhớ và tăng tốc độ suy luận đối với các danh sách lịch sử dài.
+Các phương pháp lọc cộng tác (Collaborative Filtering) truyền thống, điển hình như phân rã ma trận hay NeuMF \cite{he2017neumf}, chủ yếu dựa trên định danh (ID) của người dùng và bài báo để xây dựng bảng nhúng (embedding). Cách tiếp cận này gặp hạn chế nghiêm trọng ở vấn đề khởi động lạnh (cold-start), bởi tin tức có vòng đời vô cùng ngắn và liên tục được cập nhật; một bài báo mới xuất bản sẽ không có bất kỳ lịch sử tương tác nào để hệ thống khai thác. Do đó, các hệ thống gợi ý dựa trên nội dung (content-based) sử dụng mạng nơ-ron sâu như NRMS \cite{wu2019nrms} đã ra đời. Các hệ thống này trích xuất biểu diễn ngữ nghĩa trực tiếp từ văn bản tiêu đề và tóm tắt bài báo, qua đó mang lại hiệu quả dự đoán cao hơn rõ rệt mà không phụ thuộc vào lịch sử tương tác.
 
-Bên cạnh việc kế thừa kiến trúc cơ sở, dự án đề xuất một số cải tiến mang tính kỹ thuật. Chúng tôi áp dụng mạng tích chập một chiều kết hợp biểu diễn từ đa chiều được huấn luyện trước để trích xuất đặc trưng bài báo thay vì dùng chú ý đa đầu, nhằm tránh hiện tượng học vẹt trên các tập dữ liệu nhỏ. Ngoài ra, một cơ chế phân rã theo thời gian cũng được đưa vào để mô hình có khả năng tự động giảm bớt mức độ quan trọng của những bài báo cũ trong lịch sử đọc, phản ánh sát với thực tế khi người dùng thường quan tâm nhiều hơn đến các chủ đề mới cập nhật. Qua đó, dự án tiến hành đánh giá hiệu năng tổng thể trên các thước đo chuẩn và phân tích lỗi chuyên sâu để làm rõ ưu nhược điểm của phương pháp đề xuất.
+Dù vậy, cơ chế chú ý tự thân đa đầu (Multi-Head Self-Attention) trong NRMS có độ phức tạp tính toán bậc hai $\mathcal{O}(L^2 \cdot d)$ theo độ dài chuỗi lịch sử $L$, dẫn đến tiêu tốn bộ nhớ GPU và dễ gây tràn bộ nhớ (OOM) khi xử lý lịch sử tương tác dài của người dùng. Giới hạn vật lý này đặt ra nhu cầu cấp thiết cho một kiến trúc thay thế, có khả năng duy trì chất lượng dự đoán trong khi giảm thiểu đáng kể chi phí tính toán.
+
+\section{Mục tiêu dự án}
+
+Dự án này tập trung nghiên cứu, triển khai và đánh giá một hệ thống gợi ý tin tức hoàn chỉnh trên tập dữ liệu MIND-small \cite{wu2020mind}, với trọng tâm là giải quyết nút thắt cổ chai về độ phức tạp bậc hai của cơ chế chú ý tự thân. Các mục tiêu cụ thể bao gồm:
+
+Thứ nhất, triển khai và đánh giá các mô hình tham chiếu bao gồm NeuMF (phương pháp lọc cộng tác dựa trên ID) và NRMS (phương pháp dựa trên nội dung với chú ý tự thân), nhằm thiết lập các mốc hiệu suất chuẩn làm cơ sở so sánh.
+
+Thứ hai, nghiên cứu triển khai mô hình NRAGLS sử dụng cơ chế chú ý tuyến tính có cổng (Gated Linear Attention) \cite{yang2023gla}. Cơ chế này giúp giảm độ phức tạp xuống $\mathcal{O}(L \cdot d^2)$, giải phóng bộ nhớ và tăng tốc suy luận khi lịch sử đọc kéo dài.
+
+Thứ ba, đề xuất các cải tiến kỹ thuật bao gồm: cơ chế phân rã sự chú ý theo thời gian (Recency-Decayed Gating) giúp mô hình tự động giảm bớt ảnh hưởng của các bài báo cũ trong lịch sử đọc; và mạng tích chập một chiều (CNN) thay thế cho chú ý đa đầu ở khối mã hóa tin tức nhằm tăng cường khả năng khái quát hóa trên tập dữ liệu nhỏ.
+
+Thứ tư, theo phản hồi của giảng viên hướng dẫn, mở rộng nghiên cứu bằng việc tích hợp mô hình ngôn ngữ lớn huấn luyện trước (PLM), cụ thể là DistilBERT \cite{sanh2019distilbert}, vào khối mã hóa tin tức. Dự án thực nghiệm cả hai chiến lược: cố định trọng số (Frozen Precompute) và tinh chỉnh toàn trình (End-to-End Fine-tuning), nhằm so sánh sự đánh đổi giữa chi phí tính toán và hiệu suất dự đoán.
+
+Cuối cùng, tiến hành phân tích lỗi chuyên sâu (Error Analysis) trên các trường hợp dự đoán sai để làm rõ ưu nhược điểm và giới hạn của các phương pháp đề xuất, đồng thời đo lường định lượng hiệu năng mở rộng (Scaling Benchmark) về bộ nhớ GPU và độ trễ suy luận.
+
+\section{Phạm vi thực hiện}
+
+Dự án được thực hiện trên tập dữ liệu MIND-small, bao gồm khoảng 50.000 người dùng và hơn 65.000 bài báo, với dữ liệu hành vi thu thập trong sáu tuần. Toàn bộ quá trình huấn luyện và đánh giá được tiến hành trên nền tảng Kaggle sử dụng GPU Tesla T4 (15 GB VRAM). Giới hạn về phần cứng và thời gian phiên chạy (tối đa 12 giờ) ảnh hưởng trực tiếp đến các quyết định thiết kế, đặc biệt là số vòng lặp huấn luyện (epochs) và chiến lược tích hợp mô hình ngôn ngữ lớn.
 
 \end{document}

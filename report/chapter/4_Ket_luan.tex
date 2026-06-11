@@ -1,10 +1,22 @@
 \documentclass[../BTL.tex]{subfiles}
 \begin{document}
 
-\section{Kết luận}
+\section{Tổng kết}
 
-Dự án đã triển khai và thực nghiệm thành công một hệ thống gợi ý tin tức với khả năng xử lý đặc trưng ngữ nghĩa và chuỗi sở thích người dùng một cách hiệu quả. Bằng cách tái thiết kế lại kiến trúc lõi của các mô hình tham chiếu nổi tiếng trong ngành, dự án đã tìm ra lời giải thực tế cho vấn đề tiêu tốn tài nguyên phần cứng khổng lồ từ cơ chế chú ý tự thân truyền thống. Sự thay thế bằng các phương pháp xấp xỉ đại số hạt nhân trong một không gian chú ý tuyến tính có cổng đã chứng minh được tính đúng đắn khi nó giữ được tài nguyên bộ nhớ ở mức tăng trưởng ổn định, giúp toàn bộ ứng dụng chịu tải bền bỉ hơn rất nhiều đối với các hồ sơ người dùng hoạt động tần suất cao liên tục qua hàng tháng trời.
+Dự án đã triển khai và đánh giá thành công bảy biến thể mô hình gợi ý tin tức trên tập dữ liệu MIND-small, từ phương pháp lọc cộng tác truyền thống (NeuMF) đến các kiến trúc học sâu hiện đại tích hợp mô hình ngôn ngữ lớn (NRAGLS-BERT).
 
-Đáng chú ý, thành công của dự án không chỉ nằm ở việc kiểm chứng nguyên bản lý thuyết học thuật, mà còn đến từ khả năng tùy biến và tối ưu mạng học sâu nhằm triệt tiêu những điểm yếu cố hữu của phương pháp tiếp cận mới. Mọi sự sụt giảm độ chính xác trong giai đoạn đầu thử nghiệm đã được đảo ngược hoàn toàn thông qua cơ chế phân rã tầm quan trọng theo chiều thời gian, một cải tiến tinh tế phản ánh vô cùng trọn vẹn những thay đổi trong hành vi tiếp nhận tin tức hàng ngày. Việc tích hợp các bộ lọc không gian cục bộ từ mạng tích chập để thay thế cho cơ chế tính toán nội tại bên trong bản thân mỗi bài báo cũng mang lại hiệu ứng chống ghi nhớ bề mặt xuất sắc, qua đó nâng tổng điểm đánh giá khả năng xếp hạng vượt mặt các thế hệ mạng trước đó một khoảng cách khá an toàn. Dù quá trình phân tích quyết định sai cũng cho thấy hệ thống cần phải nỗ lực hoàn thiện hơn nữa đối với các hiện tượng nhiễu phổ biến trên không gian mạng, các khối mã nguồn và kiến thức được xây dựng từ đồ án này đã mang lại một hành trang vô cùng to lớn cho con đường tối ưu hóa các hệ thống quy mô lớn phía trước.
+Về mặt kỹ thuật, dự án đã chứng minh định lượng tính ưu việt của cơ chế chú ý tuyến tính có cổng (GLA) so với chú ý tự thân truyền thống: tại $L=1000$, kiến trúc NRAGLS tiết kiệm 78\% bộ nhớ GPU so với NRMS, đồng thời duy trì đặc tính mở rộng tuyến tính $\mathcal{O}(L)$ thay vì bậc hai $\mathcal{O}(L^2)$. Đặc tính này có ý nghĩa thực tiễn lớn cho các hệ thống triển khai quy mô lớn phục vụ người dùng có lịch sử tương tác dài.
+
+Cơ chế phân rã sự chú ý theo thời gian (Recency-Decayed Gating) và mạng tích chập một chiều (CNN) cho khối mã hóa tin tức, hai cải tiến do nhóm đề xuất, đã giúp mô hình NRAGLS++ vượt qua mốc hiệu suất của NRMS trên cả bốn thước đo, nâng AUC từ 0,5920 (phiên bản gốc) lên 0,6573. Phân tích quá trình hội tụ cho thấy mô hình NRAGLS++ đạt được sự cân bằng tốt giữa khả năng khái quát hóa và độ chính xác, tránh được hiện tượng quá khớp mà phiên bản NRAGLS gốc mắc phải.
+
+Việc tích hợp DistilBERT theo phản hồi của giảng viên đã mang lại kết quả ấn tượng. Phiên bản tinh chỉnh toàn trình NRAGLS-BERT (Top-2) đạt AUC cao nhất 0,6618, xác nhận lợi thế của học chuyển giao trong bài toán gợi ý tin tức. Đồng thời, phiên bản cố định trọng số với chỉ 0,67 triệu tham số huấn luyện và 35 giây/epoch cung cấp một giải pháp khả thi cho môi trường triển khai thực tế có giới hạn tài nguyên.
+
+\section{Hạn chế}
+
+Dự án có một số hạn chế cần được ghi nhận. Thứ nhất, thực nghiệm chỉ được tiến hành trên MIND-small (50.000 người dùng), chưa thể xác nhận tính khái quát của kết quả trên quy mô lớn hơn. Thứ hai, giới hạn về phần cứng và thời gian của Kaggle khiến nhóm không thể tinh chỉnh toàn bộ các tầng DistilBERT (chỉ mở khóa 2 tầng trên cùng) và chỉ huấn luyện 3 epoch cho biến thể tinh chỉnh. Thứ ba, dự án chỉ sử dụng tiêu đề bài báo mà chưa khai thác thêm các đặc trưng phụ như chuyên mục (category), chủ đề phụ (subcategory) hay phần tóm tắt (abstract), vốn được các công bố gốc sử dụng để đạt điểm cao hơn.
+
+\section{Hướng phát triển}
+
+Trong tương lai, dự án có thể được mở rộng theo nhiều hướng. Thứ nhất là mở rộng thực nghiệm trên tập MIND-large (khoảng 1 triệu người dùng) để kiểm chứng tính khái quát hóa. Thứ hai là nghiên cứu kỹ thuật ANN (Approximate Nearest Neighbor) để tăng tốc giai đoạn suy luận trên kho tin tức lớn. Thứ ba là tích hợp cơ chế học trực tuyến (Online Learning) để mô hình có thể cập nhật sở thích người dùng theo thời gian thực khi có tin tức mới xuất hiện. Cuối cùng, việc kết hợp thêm các đặc trưng phụ trợ (metadata) và biểu diễn đa phương thức (hình ảnh thu nhỏ, v.v.) có tiềm năng nâng cao đáng kể chất lượng gợi ý.
 
 \end{document}
